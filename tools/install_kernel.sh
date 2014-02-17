@@ -150,10 +150,10 @@ mmc_unmount () {
 mmc_detect_n_mount () {
 	echo "Starting Partition Search"
 	echo "-----------------------------"
-	num_partitions=$(LC_ALL=C sudo fdisk -l 2>/dev/null | grep "^${MMC}" | grep -v "DM6" | grep -v "Extended" | grep -v "swap" | wc -l)
+	num_partitions=$(LC_ALL=C sudo fdisk ${MMC} -l 2>/dev/null | grep "^${MMC}" | grep -v "DM6" | grep -v "Extended" | grep -v "swap" | wc -l)
 
 	i=0 ; while test $i -le ${num_partitions} ; do
-		partition=$(LC_ALL=C sudo fdisk -l 2>/dev/null | grep "^${MMC}" | grep -v "DM6" | grep -v "Extended" | grep -v "swap" | head -${i} | tail -1 | awk '{print $1}')
+		partition=$(LC_ALL=C sudo fdisk ${MMC} -l 2>/dev/null | grep "^${MMC}" | grep -v "DM6" | grep -v "Extended" | grep -v "swap" | head -${i} | tail -1 | awk '{print $1}')
 		if [ ! "x${partition}" = "x" ] ; then
 			echo "Trying: [${partition}]"
 
@@ -214,7 +214,7 @@ list_mmc () {
 }
 
 check_mmc () {
-	FDISK=$(LC_ALL=C sudo fdisk -l 2>/dev/null | grep "Disk ${MMC}" | awk '{print $2}')
+	FDISK=$(LC_ALL=C sudo fdisk ${MMC} -l 2>/dev/null | grep "Disk ${MMC}" | awk '{print $2}')
 
 	if [ "x${FDISK}" = "x${MMC}:" ] ; then
 		echo ""
